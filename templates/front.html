@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<form method="post">
+	<label>
+		<div>Title</div>
+		<input type="text" name="title" value="{{title}}">
+	</label>
+
+	<label>
+		<div>Body</div>
+		<textarea name="body">{{body}}</textarea>
+
+	</label>
+	<!-- below is the place where the error message from the post method on the main page is printing -->
+	<div class="error"> {{error}}</div>
+
+	<input type="submit">
+</form>
+
+<hr> <!-- <hr> draws a line across the page -->
+
+{% for bpost in bposts %}
+	<div class="post">
+		<div class="post-title"> {{bpost.title}}</div>
+		<pre class="post-body">{{bpost.body}}</pre> <!-- the <pre> preserves the white space that's inside it. It tells browser that spaces between the tags should actually be rendered as they are in the html -->
+	</div>
+{% endfor %}
+
+
+
+{% endblock %}
