@@ -40,11 +40,12 @@ class Handler(webapp2.RequestHandler):
 class BlogPosts(db.Model):
     title = db.StringProperty(required = True)
     body = db.TextProperty(required = True)
+    created = db.DateTimeProperty(auto_now_add = True)
 
 class MainPage(Handler):
     def render_front(self, title="", body="", error=""):
 
-        bposts = db.GqlQuery("SELECT * FROM BlogPosts")
+        bposts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC")
 
     	self.render("front.html", title=title, body=body, error=error, bposts=bposts)
 
@@ -61,12 +62,24 @@ class MainPage(Handler):
             b = BlogPosts(title = title, body = body)
             b.put()
 
-            self.redirect("/")
+            self.redirect("/blog")
 
         else:
             error = "Please enter both a post title and body."
             self.render_front(title, body, error)
 
+class Bposts(Handler):
+    def render_front(self, title="", body=""):
+
+        bposts = db.GqlQuery("SELECT * FROM BlogPosts")
+
+    	self.render("blog.html", title=title, body=body,  bposts=bposts)
+
+    def get(self):
+        self.render_front()
+
+
 app = webapp2.WSGIApplication([
-    ('/', MainPage)
+    ('/newpost', MainPage),
+    ("/blog", Bposts)
 ], debug=True)

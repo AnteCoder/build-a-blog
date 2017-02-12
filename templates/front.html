@@ -21,14 +21,6 @@
 	<input type="submit">
 </form>
 
-<hr> <!-- <hr> draws a line across the page -->
-
-{% for bpost in bposts %}
-	<div class="post">
-		<div class="post-title"> {{bpost.title}}</div>
-		<pre class="post-body">{{bpost.body}}</pre> <!-- the <pre> preserves the white space that's inside it. It tells browser that spaces between the tags should actually be rendered as they are in the html -->
-	</div>
-{% endfor %}
 
 
 
