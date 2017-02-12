@@ -43,14 +43,12 @@ class BlogPosts(db.Model):
     created = db.DateTimeProperty(auto_now_add = True)
 
 class MainPage(Handler):
-    def render_front(self, title="", body="", error=""):
+    def render_form(self, title="", body="", error=""):
 
-        bposts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC")
-
-    	self.render("front.html", title=title, body=body, error=error, bposts=bposts)
+    	self.render("front.html", title=title, body=body, error=error)
 
     def get(self):
-        self.render_front()
+        self.render_form()
 
     def post(self):
 
@@ -66,17 +64,17 @@ class MainPage(Handler):
 
         else:
             error = "Please enter both a post title and body."
-            self.render_front(title, body, error)
+            self.render_form(title, body, error)
 
 class Bposts(Handler):
-    def render_front(self, title="", body=""):
+    def render_blog(self, title="", body=""):
 
-        bposts = db.GqlQuery("SELECT * FROM BlogPosts")
+        bposts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC")
 
     	self.render("blog.html", title=title, body=body,  bposts=bposts)
 
     def get(self):
-        self.render_front()
+        self.render_blog()
 
 
 app = webapp2.WSGIApplication([
