@@ -67,6 +67,15 @@ class BlogForm(Handler):
             error = "Please enter both a post title and body."
             self.render_form(title, body, error)
 
+class Index(Handler):
+    def render_index(self):
+
+        #I am automatically redirecting from the Index to the newpost page, since the index page has no content
+    	self.redirect("/newpost")
+
+    def get(self):
+        self.render_index()
+
 class Bposts(Handler):
     def render_blog(self, title="", body=""):
 
@@ -98,6 +107,7 @@ class PostHandler(Handler):
 
 
 app = webapp2.WSGIApplication([
+    ('/', Index),
     ('/newpost', BlogForm),
     ("/blog", Bposts),
     webapp2.Route('/blog/<post_id:\d+>', PostHandler),
