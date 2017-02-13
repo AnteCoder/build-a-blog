@@ -37,12 +37,19 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
+
+    # def renderError(self, error_code):
+    #     """ Sends an HTTP error code and a generic "oops!" message to the client. """
+    #
+    #     self.error(error_code)
+    #     self.response.write("Oops! Something went wrong.")
+
 class BlogPosts(db.Model):
     title = db.StringProperty(required = True)
     body = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
 
-class MainPage(Handler):
+class BlogForm(Handler):
     def render_form(self, title="", body="", error=""):
 
     	self.render("front.html", title=title, body=body, error=error)
@@ -69,15 +76,35 @@ class MainPage(Handler):
 class Bposts(Handler):
     def render_blog(self, title="", body=""):
 
-        bposts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC")
+        bposts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC LIMIT 5")
 
     	self.render("blog.html", title=title, body=body,  bposts=bposts)
 
     def get(self):
         self.render_blog()
 
+class PostHandler(Handler):
+    def get(self, post_id, error=""):
+
+        post = BlogPosts.get_by_id(int(post_id))
+
+        if not post:
+
+            error="This post does not exist. Try again."
+            t = jinja_env.get_template('blog_post.html')
+            content = t.render(post=post, error=error)
+
+            self.response.write(content)
+
+        else:
+            t = jinja_env.get_template('blog_post.html')
+            content = t.render(post=post)
+
+            self.response.write(content)
+
 
 app = webapp2.WSGIApplication([
-    ('/newpost', MainPage),
-    ("/blog", Bposts)
+    ('/newpost', BlogForm),
+    ("/blog", Bposts),
+    webapp2.Route('/blog/<post_id:\d+>', PostHandler),
 ], debug=True)
