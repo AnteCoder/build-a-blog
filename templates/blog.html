@@ -4,7 +4,7 @@
 
 {% for bpost in bposts %}
 	<div class="post">
-		<div class="post-title"> {{bpost.title}}</div>
+		<div class="post-title"> <a href=" blog/{{ bpost.key().id() }}"> {{bpost.title}} </a></div>
 		<pre class="post-body">{{bpost.body}}</pre> <!-- the <pre> preserves the white space that's inside it. It tells browser that spaces between the tags should actually be rendered as they are in the html -->
 	</div>
 {% endfor %}

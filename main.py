@@ -38,12 +38,6 @@ class Handler(webapp2.RequestHandler):
         self.write(self.render_str(template, **kw))
 
 
-    # def renderError(self, error_code):
-    #     """ Sends an HTTP error code and a generic "oops!" message to the client. """
-    #
-    #     self.error(error_code)
-    #     self.response.write("Oops! Something went wrong.")
-
 class BlogPosts(db.Model):
     title = db.StringProperty(required = True)
     body = db.TextProperty(required = True)
@@ -67,7 +61,7 @@ class BlogForm(Handler):
             b = BlogPosts(title = title, body = body)
             b.put()
 
-            self.redirect("/blog")
+            self.redirect("/blog/" + str(b.key().id()))
 
         else:
             error = "Please enter both a post title and body."
