@@ -25,6 +25,10 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
                                 autoescape = True)
 
+# def get_posts(limit, offset):
+#     posts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC LIMIT " + str(limit) + " OFFSET " + str(offset))
+#
+#     return posts
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -70,14 +74,16 @@ class BlogForm(Handler):
 class Index(Handler):
     def render_index(self):
 
-        #I am automatically redirecting from the Index to the newpost page, since the index page has no content
-    	self.redirect("/newpost")
+        #I am automatically redirecting from the Index to the blog page, since the index page has no content
+    	self.redirect("/blog")
 
     def get(self):
         self.render_index()
 
 class Bposts(Handler):
     def render_blog(self, title="", body=""):
+
+        # bposts = get_posts(5, 0)
 
         bposts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC LIMIT 5")
 
