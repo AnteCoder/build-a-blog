@@ -25,10 +25,10 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
                                 autoescape = True)
 
-# def get_posts(limit, offset):
-#     posts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC LIMIT " + str(limit) + " OFFSET " + str(offset))
-#
-#     return posts
+def get_posts(limit, offset):
+    posts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC LIMIT " + str(limit) + " OFFSET " + str(offset))
+
+    return posts
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -83,9 +83,10 @@ class Index(Handler):
 class Bposts(Handler):
     def render_blog(self, title="", body=""):
 
-        # bposts = get_posts(5, 0)
+        # This is a call to the get_posts function above that sets the LIMIT and OFFSET on the GQL query that determines which and how many posts appear on the page
+        bposts = get_posts(5, 0)
 
-        bposts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC LIMIT 5")
+        #bposts = db.GqlQuery("SELECT * FROM BlogPosts ORDER BY created DESC LIMIT 5")
 
     	self.render("blog.html", title=title, body=body,  bposts=bposts)
 
@@ -103,13 +104,12 @@ class PostHandler(Handler):
             t = jinja_env.get_template('blog_post.html')
             content = t.render(post=post, error=error)
 
-            self.response.write(content)
 
         else:
             t = jinja_env.get_template('blog_post.html')
             content = t.render(post=post)
 
-            self.response.write(content)
+        self.response.write(content)
 
 
 app = webapp2.WSGIApplication([
