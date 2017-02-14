@@ -109,6 +109,7 @@ class PostHandler(Handler):
             t = jinja_env.get_template('blog_post.html')
             content = t.render(post=post)
 
+        #the "response.write" can be after the conditionals and apart from them because the conditionals are just setting the variables that are then getting passed on to this method
         self.response.write(content)
 
 
